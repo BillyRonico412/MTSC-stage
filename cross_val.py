@@ -55,10 +55,11 @@ for dataset in os.listdir(DATA_PATH):
     elapsed_load_time = time.perf_counter() - start_load_time
     print("Loading took: %f seconds" % elapsed_load_time)
 
-    # Now we do all cross-validatiosn on this dataset
+    # Now we will do all cross-validations on this dataset
     for classifier, classifier_name in classifiers:
         print("Classifier: "+classifier_name)
         start_time = time.perf_counter()
+        # cross-validation
         scores = cross_val_score(classifier, data, classes, cv=nb_split, n_jobs=nb_jobs)
         elapsed_time = time.perf_counter() - start_time
         print("    |Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
