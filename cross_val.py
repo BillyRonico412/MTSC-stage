@@ -29,7 +29,7 @@ nb_split = 10
 # --------------- MAIN PROGRAM ---------------------------------
 
 # Loads data for cross validation
-# [ [data, class, data name], ...]
+# [ [data, class, dataset name], ...]
 data = []
 for name in os.listdir(DATA_PATH):
     print("Loading %s dataset..." % name)
