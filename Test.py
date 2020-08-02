@@ -1,5 +1,8 @@
 # JAFFUER Pierre
-# TEST
+
+
+#This is a TEST, do not use
+
 
 from sktime.utils.load_data import load_from_tsfile_to_dataframe
 from sktime.classification.distance_based import KNeighborsTimeSeriesClassifier
