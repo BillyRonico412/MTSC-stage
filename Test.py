@@ -9,31 +9,50 @@ import os
 import sktime
 import time
 
+# -------------- SETUP ------------------------------------------
+
+# Dataset path folder
 DATA_PATH = os.path.join(os.path.dirname(__file__), "Datasets")
 
-train_x, train_y = load_from_tsfile_to_dataframe(os.path.join(DATA_PATH, "RacketSports/RacketSports_TRAIN.ts"))
-test_x, test_y = load_from_tsfile_to_dataframe(os.path.join(DATA_PATH, "RacketSports/RacketSports_TEST.ts"))
+# Datasets paths
+# [ [train set path, test set path, dataset name], ...]
+datasets_path = [
+    ["RacketSports/RacketSports_TRAIN.ts", "RacketSports/RacketSports_TEST.ts", "RacketSport"]
+]
 
-classifier1 = KNeighborsTimeSeriesClassifier(1, 'uniform', 'brute', 'dtw', None)
-classifier2 = KNeighborsTimeSeriesClassifier(4, 'uniform', 'brute', 'dtw', None)
-
-time.clock()
-classifier1.fit(train_x, train_y)
-classifier2.fit(train_x, train_y)
-
-
-pred_y_1 = classifier1.predict(test_x)
-pred_y_2 = classifier2.predict(test_x)
-
-print("DTW 1: ", accuracy_score(test_y, pred_y_1))
-print("DTW 4: ", accuracy_score(test_y, pred_y_2))
-
-tableau_convergence1 = contingency_matrix(test_y, pred_y_1)
-tableau_convergence2 = contingency_matrix(test_y, pred_y_2)
-
-print(tableau_convergence1)
-print(tableau_convergence2)
+# Setup classifier
+# [ [classifier, classifier name], ...]
+classifiers = [
+    [KNeighborsTimeSeriesClassifier(1, 'uniform', 'brute', 'dtw', None), "DTW-1NN"],
+    [KNeighborsTimeSeriesClassifier(4, 'uniform', 'brute', 'dtw', None), "DTW-4NN"]
+]
 
 
-#to do: merger les 2 bases (test+train) avant de faire la cross validation
+# --------------- MAIN PROGRAM ---------------------------------
 
+# Load data
+# [ ((train_data, train_class), (test_data, test_class), dataset name), ...]
+data = []
+for train_path, test_path, name in datasets_path:
+    data+=[(load_from_tsfile_to_dataframe(os.path.join(DATA_PATH, train_path)), 
+            load_from_tsfile_to_dataframe(os.path.join(DATA_PATH, test_path)),
+            name)]
+
+for classifier, classifier_name in classifiers:
+    print("|---"+classifier_name)
+    for ((train_data, train_class), (test_data, test_class), name) in data:
+        # Training
+        classifier.fit(train_data, train_class)
+
+        # Predicting class
+        prediction = classifier.predict(test_data)
+
+        # Computing accuracy
+        accuracy = accuracy_score(test_class, prediction)
+
+        # Computing contingency matrix
+        cm = contingency_matrix(test_class, prediction)
+
+        # Show results
+        print("    |---"+name+": ")
+        print("        Accuracy :"+str(accuracy))
