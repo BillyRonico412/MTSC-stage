@@ -2,7 +2,8 @@
 
 from sktime.utils.load_data import load_from_tsfile_to_dataframe
 from sktime.classification.distance_based import KNeighborsTimeSeriesClassifier
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, KFold
+from sklearn.metrics.cluster import contingency_matrix
 import numpy as np
 import os
 import sktime
@@ -24,8 +25,9 @@ classifiers = [
 # Number of cores to use (-1 -> all)
 nb_jobs = -1
 
-# Number of data split for cross validation
+# Split strategy
 nb_split = 10
+cv = KFold(n_splits=nb_split)
 
 # --------------- MAIN PROGRAM --------------------
 
@@ -60,7 +62,7 @@ for dataset in os.listdir(DATA_PATH):
         print("Classifier: "+classifier_name)
         start_time = time.perf_counter()
         # cross-validation
-        scores = cross_val_score(classifier, data, classes, cv=nb_split, n_jobs=nb_jobs)
+        scores = cross_val_score(classifier, data, classes, cv=cv, n_jobs=nb_jobs)
         elapsed_time = time.perf_counter() - start_time
         print("    |Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
         print("    |_Cross validation took: %f seconds" % elapsed_time)
