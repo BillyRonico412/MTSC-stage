@@ -1,6 +1,6 @@
 # JAFFUER Pierre
 
-from sktime.utils.load_data import load_from_tsfile_to_dataframe
+from sktime.utils.data_io import load_from_tsfile_to_dataframe
 from sktime.classification.distance_based import KNeighborsTimeSeriesClassifier
 from sklearn.model_selection import cross_val_score, KFold
 from sklearn.metrics.cluster import contingency_matrix
