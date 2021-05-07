@@ -18,8 +18,8 @@ DATA_PATH = os.path.join(os.path.dirname(__file__), "Datasets")
 # Classifiers
 # [ [classifier, classifier name], ...]
 classifiers = [
-    [KNeighborsTimeSeriesClassifier(1, 'uniform', 'brute', 'dtw', None), "DTW-1NN"],
-    [KNeighborsTimeSeriesClassifier(4, 'uniform', 'brute', 'dtw', None), "DTW-4NN"]
+    [KNeighborsTimeSeriesClassifier(1, 'uniform', 'dtw'), "DTW-1NN"],
+    [KNeighborsTimeSeriesClassifier(4, 'uniform', 'dtw'), "DTW-4NN"]
 ]
 
 # Number of cores to use (-1 -> all)
